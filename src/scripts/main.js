@@ -1,21 +1,13 @@
 'use strict';
 
-const tbody = document.querySelector('body');
+const body = document.querySelector('body');
 const logoBtn = document.querySelector('.logo');
 
-logoBtn.addEventListener('click', () => {
-  const promise1 = new Promise((resolve) => {
-    resolve();
-  });
-
-  promise1.then(() => {
-    const div = document.createElement('div');
-
-    div.classList.add('message');
-    div.textContent = 'Promise was resolved!';
-    tbody.appendChild(div);
-  });
+const promise1 = new Promise((resolve) => {
+  logoBtn.addEventListener('click', resolve, { once: true });
 });
+
+promise1.then(createSuccessMessage).catch(createErrorMessage);
 
 const promise2 = new Promise((resolve, reject) => {
   setTimeout(() => {
@@ -23,10 +15,20 @@ const promise2 = new Promise((resolve, reject) => {
   }, 3000);
 });
 
-promise2.catch(() => {
+promise2.then(createSuccessMessage).catch(createErrorMessage);
+
+function createSuccessMessage() {
+  const div = document.createElement('div');
+
+  div.classList.add('message');
+  div.textContent = 'Promise was resolved!';
+  body.appendChild(div);
+}
+
+function createErrorMessage() {
   const div = document.createElement('div');
 
   div.classList.add('message', 'error-message');
   div.textContent = 'Promise was rejected!';
-  tbody.appendChild(div);
-});
+  body.appendChild(div);
+}
